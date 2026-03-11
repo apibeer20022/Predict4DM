@@ -15,7 +15,7 @@
         input[type="number"] { font-weight: bold; border-color: #2a5298; border-radius: 8px; }
         .formula-text { font-size: 0.8rem; color: #6c757d; font-style: italic; margin-top: 4px; }
         .table thead { background-color: #f8f9fa; }
-        .ref-table { font-size: 0.9rem; }
+        .ref-table { font-size: 0.85rem; }
         .note-box { background-color: #fff9db; border-left: 5px solid #fab005; padding: 20px; border-radius: 8px; line-height: 1.6; color: #495057; }
         h1 { font-size: 1.8rem; font-weight: 700; }
         .section-title { color: #1e3c72; border-bottom: 2px solid #1e3c72; display: inline-block; margin-bottom: 20px; padding-bottom: 5px; }
@@ -56,24 +56,25 @@
             </div>
 
             <div class="card p-4">
-                <h5 class="section-title">📌 ข้อมูลอ้างอิงทางสถิติ (Table 2)</h5>
+                <h5 class="section-title">📌 ประสิทธิภาพของโมเดล (Prediction Accuracy)</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered ref-table text-center table-sm">
-                        <thead class="table-secondary">
+                        <thead class="table-primary">
                             <tr>
                                 <th>Parameters</th>
-                                <th>Mean difference<br>(QGS - 4D-M)</th>
-                                <th>SD</th>
-                                <th>95% Limits of Agreement</th>
+                                <th>Mean Error<br>(mL or %)</th>
+                                <th>Mean Absolute Error<br>(mL or %)</th>
+                                <th>R<sup>2</sup></th>
+                                <th>Correlation<br>(r or ρ)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>Rest EDV</td><td>-33.8</td><td>15.7</td><td>[-64.7 to -3]</td></tr>
-                            <tr><td>Rest ESV</td><td>-6.2</td><td>10.5</td><td>[-26.7 to 14.4]</td></tr>
-                            <tr><td>Rest LVEF</td><td>1.5</td><td>9.9</td><td>[-18.01 to 21.02]</td></tr>
-                            <tr><td>Stress EDV</td><td>-31.7</td><td>17.5</td><td>[-66.0 to 2.7]</td></tr>
-                            <tr><td>Stress ESV</td><td>-6.7</td><td>12.3</td><td>[-30.8 to 17.4]</td></tr>
-                            <tr><td>Stress LVEF</td><td>0.08</td><td>10.0</td><td>[-19.55 to 19.71]</td></tr>
+                            <tr><td>Rest EDV</td><td>11.08</td><td>12.33</td><td>0.77</td><td>0.88</td></tr>
+                            <tr><td>Rest ESV</td><td>5.86</td><td>7.39</td><td>0.73</td><td>0.85</td></tr>
+                            <tr><td>Rest LVEF</td><td>6.91</td><td>7.95</td><td>0.53</td><td>0.73</td></tr>
+                            <tr><td>Stress EDV</td><td>11.66</td><td>12.87</td><td>0.76</td><td>0.87</td></tr>
+                            <tr><td>Stress ESV</td><td>6.64</td><td>8.41</td><td>0.73</td><td>0.86</td></tr>
+                            <tr><td>Stress LVEF</td><td>7.02</td><td>8.01</td><td>0.58</td><td>0.76</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -89,7 +90,6 @@
 </div>
 
 <script>
-    // การตั้งค่า LoA ในที่นี้ใช้เกณฑ์ (4D-M - QGS) ตามหมายเหตุของคุณเบียร์
     const config = [
         { id: 'rest_edv', label: 'Rest EDV', m: 1.1751, c: 6.2682, loa: [3, 64.7], loaDisplay: '[3, 64.7]', formula: '4D-M = (1.1751 * QGS) + 6.2682' },
         { id: 'rest_esv', label: 'Rest ESV', m: 1.0214, c: 5.8188, loa: [-14.4, 26.7], loaDisplay: '[-14.4, 26.7]', formula: '4D-M = (1.0214 * QGS) + 5.8188' },
@@ -108,7 +108,7 @@
             div.className = 'mb-4';
             div.innerHTML = `
                 <label class="form-label fw-bold">${item.label}</label>
-                <input type="number" class="form-control" id="in_${item.id}" placeholder="ใส่ค่า QGS..." oninput="calculate()">
+                <input type="number" class="form-control" id="in_${item.id}" placeholder="ระบุค่า QGS..." oninput="calculate()">
                 <div class="formula-text">${item.formula}</div>
             `;
             inputContainer.appendChild(div);
@@ -132,7 +132,7 @@
 
             if (!isNaN(val)) {
                 const predicted = (item.m * val) + item.c;
-                const diff = predicted - val; // คำนวณตามเกณฑ์ 4D-M - QGS
+                const diff = predicted - val;
                 const isOk = diff >= item.loa[0] && diff <= item.loa[1];
 
                 resCell.innerText = predicted.toFixed(4);

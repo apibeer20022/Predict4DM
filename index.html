@@ -41,12 +41,12 @@
             <div class="card p-4">
                 <h4 class="mb-4 text-success">🎯 ผลการทำนาย (Results)</h4>
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table table-hover align-middle text-center">
                         <thead>
                             <tr>
-                                <th>พารามิเตอร์</th>
+                                <th class="text-start">พารามิเตอร์</th>
                                 <th>ค่า 4D-M ที่ทำนาย</th>
-                                <th class="text-center">95% Limits of Agreement</th>
+                                <th>95% Limits of Agreement</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -56,25 +56,26 @@
             </div>
 
             <div class="card p-4">
-                <h5 class="section-title">📌 ประสิทธิภาพของโมเดล (Prediction Accuracy)</h5>
+                <h5 class="section-title">📌 ประสิทธิภาพของแบบจำลอง (Model Performance)</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered ref-table text-center table-sm">
-                        <thead class="table-primary">
+                        <thead class="table-dark">
                             <tr>
                                 <th>Parameters</th>
-                                <th>Mean Error<br>(mL or %)</th>
-                                <th>Mean Absolute Error<br>(mL or %)</th>
-                                <th>R<sup>2</sup></th>
-                                <th>Correlation<br>(r or ρ)</th>
+                                <th>Correlation</th>
+                                <th>P-value</th>
+                                <th>R²</th>
+                                <th>RMSE</th>
+                                <th>CV R²(Avg)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>Rest EDV</td><td>11.08</td><td>12.33</td><td>0.77</td><td>0.88</td></tr>
-                            <tr><td>Rest ESV</td><td>5.86</td><td>7.39</td><td>0.73</td><td>0.85</td></tr>
-                            <tr><td>Rest LVEF</td><td>6.91</td><td>7.95</td><td>0.53</td><td>0.73</td></tr>
-                            <tr><td>Stress EDV</td><td>11.66</td><td>12.87</td><td>0.76</td><td>0.87</td></tr>
-                            <tr><td>Stress ESV</td><td>6.64</td><td>8.41</td><td>0.73</td><td>0.86</td></tr>
-                            <tr><td>Stress LVEF</td><td>7.02</td><td>8.01</td><td>0.58</td><td>0.76</td></tr>
+                            <tr><td>Rest EDV</td><td>0.8757</td><td>&lt;0.001</td><td>0.7668</td><td>15.6881</td><td>0.7302</td></tr>
+                            <tr><td>Rest ESV</td><td>0.8528</td><td>&lt;0.001</td><td>0.7272</td><td>10.4571</td><td>0.6970</td></tr>
+                            <tr><td>Rest LVEF</td><td>0.7297</td><td>&lt;0.001</td><td>0.5325</td><td>9.9213</td><td>0.4439</td></tr>
+                            <tr><td>Stress EDV</td><td>0.8706</td><td>&lt;0.001</td><td>0.7579</td><td>17.5190</td><td>0.7317</td></tr>
+                            <tr><td>Stress ESV</td><td>0.8550</td><td>&lt;0.001</td><td>0.7311</td><td>12.3082</td><td>0.7042</td></tr>
+                            <tr><td>Stress LVEF</td><td>0.7617</td><td>&lt;0.001</td><td>0.5802</td><td>10.0151</td><td>0.5212</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -115,9 +116,9 @@
 
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><strong>${item.label}</strong></td>
+                <td class="text-start"><strong>${item.label}</strong></td>
                 <td id="res_${item.id}" class="fw-bold text-primary">-</td>
-                <td class="text-center text-muted small">${item.loaDisplay}</td>
+                <td class="text-muted small">${item.loaDisplay}</td>
                 <td id="stat_${item.id}">-</td>
             `;
             tableBody.appendChild(row);

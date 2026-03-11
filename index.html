@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predict 4D-M Tool - Version Updated</title>
+    <title>Corridor4DM Prediction Tool</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f0f2f5; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none; margin-bottom: 20px; }
-        .header-section { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 30px; border-radius: 15px; margin-bottom: 30px; }
+        body { background-color: #f4f7f6; padding: 20px; font-family: 'Sarabun', sans-serif; }
+        .card { border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none; margin-bottom: 25px; }
+        .header-section { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 40px; border-radius: 15px; margin-bottom: 30px; }
         .status-ok { color: #28a745; font-weight: bold; }
         .status-fail { color: #dc3545; font-weight: bold; }
         input[type="number"] { font-weight: bold; border-color: #2a5298; border-radius: 8px; }
         .formula-text { font-size: 0.8rem; color: #6c757d; font-style: italic; margin-top: 4px; }
-        .table thead { background-color: #e9ecef; }
-        .note-box { background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px; border-radius: 8px; font-size: 0.95rem; line-height: 1.6; }
+        .table thead { background-color: #f8f9fa; }
+        .ref-table { font-size: 0.9rem; }
+        .note-box { background-color: #fff9db; border-left: 5px solid #fab005; padding: 20px; border-radius: 8px; line-height: 1.6; color: #495057; }
+        h1 { font-size: 1.8rem; font-weight: 700; }
+        .section-title { color: #1e3c72; border-bottom: 2px solid #1e3c72; display: inline-block; margin-bottom: 20px; padding-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -22,15 +26,14 @@
 <div class="container">
     <div class="header-section text-center">
         <h1>📊 Predict 4D-M from QPS/QGS</h1>
-        <p>การพัฒนาแบบจำลองเพื่อทำนายค่าพารามิเตอร์ของซอฟต์แวร์ Corridor4DM จากค่าที่ได้จากซอฟต์แวร์ QPS/QGS</p>
+        <p class="lead">การพัฒนาแบบจำลองเพื่อทำนายค่าพารามิเตอร์ของซอฟต์แวร์ Corridor4DM จากค่าที่ได้จากซอฟต์แวร์ QPS/QGS</p>
     </div>
 
     <div class="row">
         <div class="col-lg-4">
             <div class="card p-4">
                 <h4 class="mb-4 text-primary">📝 ใส่ค่า QPS/QGS</h4>
-                <div id="inputs">
-                    </div>
+                <div id="inputs"></div>
             </div>
         </div>
 
@@ -43,17 +46,41 @@
                             <tr>
                                 <th>พารามิเตอร์</th>
                                 <th>ค่า 4D-M ที่ทำนาย</th>
-                                <th class="text-center">95% LoA Range</th>
+                                <th class="text-center">95% Limits of Agreement</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody id="result-table">
-                            </tbody>
+                        <tbody id="result-table"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card p-4">
+                <h5 class="section-title">📌 ข้อมูลอ้างอิงทางสถิติ (Table 2)</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered ref-table text-center table-sm">
+                        <thead class="table-secondary">
+                            <tr>
+                                <th>Parameters</th>
+                                <th>Mean difference<br>(QGS - 4D-M)</th>
+                                <th>SD</th>
+                                <th>95% Limits of Agreement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Rest EDV</td><td>-33.8</td><td>15.7</td><td>[-64.7 to -3]</td></tr>
+                            <tr><td>Rest ESV</td><td>-6.2</td><td>10.5</td><td>[-26.7 to 14.4]</td></tr>
+                            <tr><td>Rest LVEF</td><td>1.5</td><td>9.9</td><td>[-18.01 to 21.02]</td></tr>
+                            <tr><td>Stress EDV</td><td>-31.7</td><td>17.5</td><td>[-66.0 to 2.7]</td></tr>
+                            <tr><td>Stress ESV</td><td>-6.7</td><td>12.3</td><td>[-30.8 to 17.4]</td></tr>
+                            <tr><td>Stress LVEF</td><td>0.08</td><td>10.0</td><td>[-19.55 to 19.71]</td></tr>
+                        </tbody>
                     </table>
                 </div>
 
-                <div class="note-box mt-4">
-                    <strong>หมายเหตุ:</strong> 95% LoA คือช่วงค่าความแตกต่างจากการวิเคราะห์ Bland–Altman ที่คาดว่า 95% ของความแตกต่างระหว่างค่าจากโปรแกรม QGS และ 4D-M จะอยู่ภายในช่วงนี้ โดยการประเมินใช้ค่าความแตกต่าง (4D-M − QGS)
+                <div class="note-box mt-3">
+                    <strong>หมายเหตุ:</strong> 95% Limits of Agreement (95% LoA) คือช่วงค่าความแตกต่างจากการวิเคราะห์ Bland–Altman ที่คาดว่า 95% ของความแตกต่างระหว่างค่าจากโปรแกรม QGS และ 4D-M จะอยู่ภายในช่วงนี้ โดยการประเมินใช้ค่าความแตกต่าง (4D-M − QGS)
+                    <br><br>
                     ทั้งนี้ EDV และ ESV วิเคราะห์ความสัมพันธ์ด้วย Spearman correlation ส่วน LVEF ใช้ Pearson correlation.
                 </div>
             </div>
@@ -62,14 +89,14 @@
 </div>
 
 <script>
-    // ข้อมูลพารามิเตอร์ตามไฟล์ Excel
+    // การตั้งค่า LoA ในที่นี้ใช้เกณฑ์ (4D-M - QGS) ตามหมายเหตุของคุณเบียร์
     const config = [
-        { id: 'rest_edv', label: 'Rest EDV', m: 1.1751, c: 6.2682, loa: [3, 64.7], loaText: '[ 3, 64.7 ]', formula: '4D-M = (1.1751 * QGS) + 6.2682' },
-        { id: 'rest_esv', label: 'Rest ESV', m: 1.0214, c: 5.8188, loa: [-14.4, 26.7], loaText: '[ -14.4, 26.7 ]', formula: '4D-M = (1.0214 * QGS) + 5.8188' },
-        { id: 'rest_lvef', label: 'Rest LVEF', m: 0.5988, c: 25.2915, loa: [-21.92, 19.01], loaText: '[ -21.92, 19.01 ]', formula: '4D-M = (0.5988 * QGS) + 25.2915' },
-        { id: 'stress_edv', label: 'Stress EDV', m: 1.1839, c: 5.4812, loa: [-2.7, 66], loaText: '[ -2.7, 66 ]', formula: '4-DM = (1.1839 * QGS) + 5.4812' },
-        { id: 'stress_esv', label: 'Stress ESV', m: 1.0230, c: 5.0329, loa: [-17.4, 30.8], loaText: '[ -17.4, 30.8 ]', formula: '4-DM = (1.0230 * QGS) + 5.0329' },
-        { id: 'stress_lvef', label: 'Stress LVEF', m: 0.6359, c: 23.6683, loa: [-19.71, 19.55], loaText: '[ -19.71, 19.55 ]', formula: '4D-M = (0.6359 * QGS) + 23.6683' }
+        { id: 'rest_edv', label: 'Rest EDV', m: 1.1751, c: 6.2682, loa: [3, 64.7], loaDisplay: '[3, 64.7]', formula: '4D-M = (1.1751 * QGS) + 6.2682' },
+        { id: 'rest_esv', label: 'Rest ESV', m: 1.0214, c: 5.8188, loa: [-14.4, 26.7], loaDisplay: '[-14.4, 26.7]', formula: '4D-M = (1.0214 * QGS) + 5.8188' },
+        { id: 'rest_lvef', label: 'Rest LVEF', m: 0.5988, c: 25.2915, loa: [-21.02, 18.01], loaDisplay: '[-21.02, 18.01]', formula: '4D-M = (0.5988 * QGS) + 25.2915' },
+        { id: 'stress_edv', label: 'Stress EDV', m: 1.1839, c: 5.4812, loa: [-2.7, 66], loaDisplay: '[-2.7, 66]', formula: '4-DM = (1.1839 * QGS) + 5.4812' },
+        { id: 'stress_esv', label: 'Stress ESV', m: 1.0230, c: 5.0329, loa: [-17.4, 30.8], loaDisplay: '[-17.4, 30.8]', formula: '4-DM = (1.0230 * QGS) + 5.0329' },
+        { id: 'stress_lvef', label: 'Stress LVEF', m: 0.6359, c: 23.6683, loa: [-19.71, 19.55], loaDisplay: '[-19.71, 19.55]', formula: '4D-M = (0.6359 * QGS) + 23.6683' }
     ];
 
     function init() {
@@ -77,22 +104,20 @@
         const tableBody = document.getElementById('result-table');
 
         config.forEach(item => {
-            // สร้างช่อง Input
             const div = document.createElement('div');
             div.className = 'mb-4';
             div.innerHTML = `
                 <label class="form-label fw-bold">${item.label}</label>
-                <input type="number" class="form-control" id="in_${item.id}" placeholder="ระบุค่า..." oninput="calculate()">
+                <input type="number" class="form-control" id="in_${item.id}" placeholder="ใส่ค่า QGS..." oninput="calculate()">
                 <div class="formula-text">${item.formula}</div>
             `;
             inputContainer.appendChild(div);
 
-            // สร้างแถวในตาราง
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><strong>${item.label}</strong></td>
                 <td id="res_${item.id}" class="fw-bold text-primary">-</td>
-                <td class="text-center text-muted small">${item.loaText}</td>
+                <td class="text-center text-muted small">${item.loaDisplay}</td>
                 <td id="stat_${item.id}">-</td>
             `;
             tableBody.appendChild(row);
@@ -106,19 +131,14 @@
             const statCell = document.getElementById(`stat_${item.id}`);
 
             if (!isNaN(val)) {
-                // คำนวณค่า 4D-M
                 const predicted = (item.m * val) + item.c;
-                const diff = predicted - val; // คำนวณความต่าง (4D-M - QGS)
-                
-                // เช็คว่าอยู่ในช่วง LoA หรือไม่
+                const diff = predicted - val; // คำนวณตามเกณฑ์ 4D-M - QGS
                 const isOk = diff >= item.loa[0] && diff <= item.loa[1];
 
                 resCell.innerText = predicted.toFixed(4);
                 statCell.innerHTML = isOk 
-                    ? `<span class="status-ok">✅ ผ่าน</span>` 
-                    : `<span class="status-fail">❌ เกินเกณฑ์</span>`;
-                
-                statCell.title = `Diff: ${diff.toFixed(4)}`;
+                    ? `<span class="status-ok">✅ ภายในเกณฑ์</span>` 
+                    : `<span class="status-fail">❌ นอกเกณฑ์</span>`;
             } else {
                 resCell.innerText = '-';
                 statCell.innerText = '-';

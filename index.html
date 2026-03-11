@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corridor4DM Prediction Tool</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body { background-color: #f4f7f6; padding: 20px; font-family: 'Sarabun', sans-serif; }
         .card { border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: none; margin-bottom: 25px; }
@@ -14,11 +14,9 @@
         .status-fail { color: #dc3545; font-weight: bold; }
         input[type="number"] { font-weight: bold; border-color: #2a5298; border-radius: 8px; }
         .formula-text { font-size: 0.8rem; color: #6c757d; font-style: italic; margin-top: 4px; }
-        .table thead { background-color: #f8f9fa; }
         .ref-table { font-size: 0.85rem; }
-        .note-box { background-color: #fff9db; border-left: 5px solid #fab005; padding: 20px; border-radius: 8px; line-height: 1.6; color: #495057; }
-        h1 { font-size: 1.8rem; font-weight: 700; }
-        .section-title { color: #1e3c72; border-bottom: 2px solid #1e3c72; display: inline-block; margin-bottom: 20px; padding-bottom: 5px; }
+        .note-box { background-color: #fff9db; border-left: 5px solid #fab005; padding: 20px; border-radius: 8px; color: #495057; }
+        .section-title { color: #1e3c72; border-bottom: 2px solid #1e3c72; display: inline-block; margin-bottom: 20px; padding-bottom: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -43,7 +41,7 @@
                 <div class="table-responsive">
                     <table class="table table-hover align-middle text-center">
                         <thead>
-                            <tr>
+                            <tr class="table-light">
                                 <th class="text-start">พารามิเตอร์</th>
                                 <th>ค่า 4D-M ที่ทำนาย</th>
                                 <th>95% Limits of Agreement</th>
@@ -80,9 +78,8 @@
                     </table>
                 </div>
 
-                <div class="note-box mt-3">
+                <div class="note-box mt-3 small">
                     <strong>หมายเหตุ:</strong> 95% Limits of Agreement (95% LoA) คือช่วงค่าความแตกต่างจากการวิเคราะห์ Bland–Altman ที่คาดว่า 95% ของความแตกต่างระหว่างค่าจากโปรแกรม QGS และ 4D-M จะอยู่ภายในช่วงนี้ โดยการประเมินใช้ค่าความแตกต่าง (4D-M − QGS)
-                    <br><br>
                     ทั้งนี้ EDV และ ESV วิเคราะห์ความสัมพันธ์ด้วย Spearman correlation ส่วน LVEF ใช้ Pearson correlation.
                 </div>
             </div>
@@ -103,24 +100,19 @@
     function init() {
         const inputContainer = document.getElementById('inputs');
         const tableBody = document.getElementById('result-table');
-
         config.forEach(item => {
             const div = document.createElement('div');
             div.className = 'mb-4';
-            div.innerHTML = `
-                <label class="form-label fw-bold">${item.label}</label>
+            div.innerHTML = `<label class="form-label fw-bold">${item.label}</label>
                 <input type="number" class="form-control" id="in_${item.id}" placeholder="ระบุค่า QGS..." oninput="calculate()">
-                <div class="formula-text">${item.formula}</div>
-            `;
+                <div class="formula-text">${item.formula}</div>`;
             inputContainer.appendChild(div);
 
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="text-start"><strong>${item.label}</strong></td>
+            row.innerHTML = `<td class="text-start"><strong>${item.label}</strong></td>
                 <td id="res_${item.id}" class="fw-bold text-primary">-</td>
                 <td class="text-muted small">${item.loaDisplay}</td>
-                <td id="stat_${item.id}">-</td>
-            `;
+                <td id="stat_${item.id}">-</td>`;
             tableBody.appendChild(row);
         });
     }
@@ -130,23 +122,18 @@
             const val = parseFloat(document.getElementById(`in_${item.id}`).value);
             const resCell = document.getElementById(`res_${item.id}`);
             const statCell = document.getElementById(`stat_${item.id}`);
-
             if (!isNaN(val)) {
                 const predicted = (item.m * val) + item.c;
                 const diff = predicted - val;
                 const isOk = diff >= item.loa[0] && diff <= item.loa[1];
-
                 resCell.innerText = predicted.toFixed(4);
-                statCell.innerHTML = isOk 
-                    ? `<span class="status-ok">✅ ภายในเกณฑ์</span>` 
-                    : `<span class="status-fail">❌ นอกเกณฑ์</span>`;
+                statCell.innerHTML = isOk ? `<span class="status-ok">✅ ภายในเกณฑ์</span>` : `<span class="status-fail">❌ นอกเกณฑ์</span>`;
             } else {
                 resCell.innerText = '-';
                 statCell.innerText = '-';
             }
         });
     }
-
     init();
 </script>
 
